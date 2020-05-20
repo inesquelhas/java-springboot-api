@@ -100,8 +100,8 @@ public class ClienteService {
                 cliente.setPassword(dto.getPassword());
             }
 
-            if (dto.getDataNascimento() != null) {
-                cliente.setDataNascimento(dto.getDataNascimento());
+            if (dto.getDtNasc() != null) {
+                cliente.setDataNascimento(dto.getDtNasc());
             }
 
             cliente.setDataAtualizacao(new Date());

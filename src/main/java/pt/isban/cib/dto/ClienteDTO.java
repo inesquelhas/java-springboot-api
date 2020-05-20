@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import pt.isban.cib.entity.Cliente;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
@@ -50,10 +49,6 @@ public class ClienteDTO {
         return email;
     }
 
-   /* public String getPassword() {
-        return password;
-    }*/
-
     public String getNome() {
         return nome;
     }
@@ -81,10 +76,6 @@ public class ClienteDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    /*public void setPassword(String password) {
-        this.password = password;
-    }*/
 
     public void setNome(String nome) {
         this.nome = nome;

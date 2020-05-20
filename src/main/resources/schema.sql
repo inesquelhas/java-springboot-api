@@ -1,15 +1,14 @@
 create table if not exists addresses (
    address_id int primary key,
-   postal_code_id varchar(8) not null,
-   locale_number varchar(10) not null,
-   additional_info varchar(100) not null,
+   street_name varchar(100) not null,
+   street_complement varchar(100) not null,
    creation_at timestamp not null,
    updated_at timestamp null
 );
 
 create table if not exists clients (
    client_id int primary key,
-   --address_id int not null,
+   address_id int not null,
    email varchar(100) not null,
    password varchar(100) not null,
    name varchar(100) not null,
@@ -17,7 +16,7 @@ create table if not exists clients (
    creation_at timestamp not null,
    updated_at timestamp null,
    active char(1)
-   --constraint fk_clients_address foreign key (address_id) references addresses(address_id)
+   constraint fk_clients_address foreign key (address_id) references addresses(address_id)
 );
 
 create table if not exists identifications (

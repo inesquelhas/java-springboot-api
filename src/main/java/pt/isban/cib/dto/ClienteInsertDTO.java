@@ -2,17 +2,26 @@ package pt.isban.cib.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pt.isban.cib.annotations.ValidaClienteInput;
 import pt.isban.cib.entity.Cliente;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
 //DTO da classe Cliente - Para ser usado quando queremos inserir cliente
+@ValidaClienteInput
 public class ClienteInsertDTO {
 
+    @NotNull(message = "O email não pode ser vazio")
+    @Email(message = "O email não é válido")
     private String email;
+
+    @NotNull(message = "A password não pode ser vazia")
     private String password;
 
+    @NotNull(message = "O nome não pode ser vazio")
     private String nome;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -34,7 +43,7 @@ public class ClienteInsertDTO {
         return nome;
     }
 
-    public Date getDataNascimento() {
+    public Date getDtNasc() {
         return dtNasc;
     }
 
@@ -50,8 +59,7 @@ public class ClienteInsertDTO {
         this.nome = nome;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
-        this.dtNasc = dataNascimento;
+    public void setDtNasc(Date dtNasc) {
+        this.dtNasc = dtNasc;
     }
-
 }

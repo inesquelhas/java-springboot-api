@@ -1,16 +1,21 @@
 package pt.isban.cib.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import pt.isban.cib.dto.ClienteInsertDTO;
+import pt.isban.cib.enums.PrivilegioEnum;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 //Classe de representação de objectos do banco de dados
 @Entity
@@ -66,7 +71,22 @@ public class Cliente {
     @Column(name="active")
     private String ativo;
 
-    //TO DO Criar endereco
+    @NotNull
+    @OneToOne(cascade=CascadeType.ALL) //cascade all - se apagar clente, apaga morada
+    @JoinColumn(name = "address_id")
+    private Morada morada;
+
+    @NotEmpty
+    @OneToMany(mappedBy="cliente" , cascade=CascadeType.ALL) //cascade all - se apagar clente, apaga morada
+    private List<DocumentoIdentificacao> docList = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(name="clients_roles",
+                    joinColumns = @JoinColumn(name="client_id"),
+                    inverseJoinColumns = @JoinColumn(name="role_id"))
+    private List<Privilegio> privilegioList = new ArrayList<>();
 
     public Cliente(){
     }
@@ -75,7 +95,7 @@ public class Cliente {
         this.email = dto.getEmail();
         this.password = dto.getPassword();
         this.nome = dto.getNome();
-        this.dataNascimento = dto.getDataNascimento();
+        this.dataNascimento = dto.getDtNasc();
     }
 
     public Integer getClienteId() {
@@ -148,6 +168,27 @@ public class Cliente {
         } else {
             this.ativo = "0";
         }
+    }
+
+    public Morada getMorada() {
+        return morada;
+    }
+
+    public void setMorada(Morada morada) {
+        this.morada = morada;
+    }
+
+    public List<PrivilegioEnum> getPrivilegios() {
+        return this.privilegioList
+                .stream()
+                .map( privilegio -> PrivilegioEnum.toEnum(privilegio.getPrivilegioId()) )
+                .collect(Collectors.toList());
+    }
+
+    public void setRoles(List<PrivilegioEnum> PrivilegiosList) {
+        this.privilegioList = PrivilegiosList.stream()
+                .map( privilegio -> new Privilegio(privilegio))
+                .collect(Collectors.toList());
     }
 
     @Override

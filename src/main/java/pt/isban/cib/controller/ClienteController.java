@@ -11,6 +11,7 @@ import pt.isban.cib.entity.Cliente;
 import pt.isban.cib.repository.ClienteRepository;
 import pt.isban.cib.service.ClienteService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +115,7 @@ public class ClienteController {
 
     //POST
     @PostMapping(path = "/clientes")
-    public ResponseEntity<ClienteDTO> InserirCliente(@RequestBody ClienteInsertDTO dto) throws Throwable{
+    public ResponseEntity<ClienteDTO> InserirCliente(@Valid @RequestBody ClienteInsertDTO dto) throws Throwable{
 
         ClienteDTO clienteDTO = clienteService.saveDTO(dto);
 
