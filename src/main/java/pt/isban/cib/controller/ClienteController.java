@@ -3,6 +3,7 @@ package pt.isban.cib.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pt.isban.cib.dto.ClienteDTO;
@@ -77,6 +78,7 @@ public class ClienteController {
     }*/
 
     //GET - Igual ao metodo da linha 46, mas numa forma mais simplificada (sem repetição de codigo)
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(path = "/clientes")
     public ResponseEntity<List<ClienteDTO>> getClientesAtivos(
             @RequestParam(required=false, defaultValue = "") String nome,
@@ -102,6 +104,7 @@ public class ClienteController {
     }
 
     //GET - Igual ao metodo GET de cima, mas o path muda - USADO PARA CONSULTA DE CLIENTE POR ID
+    @PreAuthorize("hasAnyRole('CLIENT','ADMIN')")
     @GetMapping(path = "/clientes/{id}")
     public ResponseEntity<ClienteDTO> getClientesById(@PathVariable Integer id) throws Throwable{
 
@@ -129,6 +132,7 @@ public class ClienteController {
     }
 
     //PUT
+    @PreAuthorize("hasAnyRole('CLIENT','ADMIN')")
     @PutMapping(path = "/clientes/{id}")
     public ResponseEntity<ClienteDTO> AtualizarCliente(@PathVariable Integer id,
                                                        @RequestBody ClienteInsertDTO dto) throws Throwable{
@@ -142,6 +146,7 @@ public class ClienteController {
     }
 
     //DELETE
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(path = "/clientes/{id}")
     public ResponseEntity<Void> removerClienteById(@PathVariable Integer id) throws Throwable{
 

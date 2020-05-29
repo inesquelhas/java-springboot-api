@@ -1,8 +1,11 @@
 package pt.isban.cib.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -16,13 +19,13 @@ public class Morada {
     private Integer moradaId;
 
     @Column(name="street_name")
-    @Max(value = 100)
+    @Size(max = 100)
     @NotNull
     private String endereco;
 
 
     @Column(name="street_complement")
-    @Max(value = 100)
+    @Size(max = 100)
     @NotNull
     private String enderecoComplement;
 
@@ -35,6 +38,9 @@ public class Morada {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtAtualizacao;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "morada")
+    private Cliente cliente;
 
     public Integer getMoradaId() {
         return moradaId;
@@ -74,5 +80,13 @@ public class Morada {
 
     public void setDtAtualizacao(Date dtAtualizacao) {
         this.dtAtualizacao = dtAtualizacao;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }

@@ -1,10 +1,12 @@
 package pt.isban.cib.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import pt.isban.cib.dto.DocumentoDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -23,7 +25,7 @@ public class DocumentoIdentificacao {
 
     @Column(name="ident_code")
     @NotNull
-    @Max(value=100)
+    @Size(max = 100)
     private String numeroDocumento;
 
     @Column(name="emission_date")
@@ -50,6 +52,15 @@ public class DocumentoIdentificacao {
     @ManyToOne
     @JoinColumn(name="client_id",nullable = false)
     private Cliente cliente;
+
+    public DocumentoIdentificacao() {};
+
+    public DocumentoIdentificacao(DocumentoDTO dto) {
+        this.tipoDocumento = dto.getTipo().getCodigo();
+        this.numeroDocumento = dto.getNumero();
+        this.dtEmissao = dto.getDtEmissao();
+        this.dtValidade = dto.getDtValidade();
+    }
 
     public Integer getDocumentoIdentificacaoId() {
         return documentoIdentificacaoId;

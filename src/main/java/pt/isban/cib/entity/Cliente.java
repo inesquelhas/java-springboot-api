@@ -96,6 +96,17 @@ public class Cliente {
         this.password = dto.getPassword();
         this.nome = dto.getNome();
         this.dataNascimento = dto.getDtNasc();
+
+        this.morada = new Morada();
+        this.morada.setEndereco(dto.getMorada().getEndereco());
+
+        this.morada.setEnderecoComplement(dto.getMorada().getComplemento());
+
+        this.docList.addAll(dto.getDocumentos()
+                .stream()
+                .map (dtoList -> new DocumentoIdentificacao(dtoList))
+                .collect(Collectors.toList())
+        );
     }
 
     public Integer getClienteId() {
@@ -178,17 +189,25 @@ public class Cliente {
         this.morada = morada;
     }
 
-    public List<PrivilegioEnum> getPrivilegios() {
+    public List<PrivilegioEnum> getPrivilegioList() {
         return this.privilegioList
                 .stream()
                 .map( privilegio -> PrivilegioEnum.toEnum(privilegio.getPrivilegioId()) )
                 .collect(Collectors.toList());
     }
 
-    public void setRoles(List<PrivilegioEnum> PrivilegiosList) {
+    public void setPrivilegioList(List<PrivilegioEnum> PrivilegiosList) {
         this.privilegioList = PrivilegiosList.stream()
                 .map( privilegio -> new Privilegio(privilegio))
                 .collect(Collectors.toList());
+    }
+
+    public List<DocumentoIdentificacao> getDocList() {
+        return docList;
+    }
+
+    public void setDocList(List<DocumentoIdentificacao> docList) {
+        this.docList = docList;
     }
 
     @Override

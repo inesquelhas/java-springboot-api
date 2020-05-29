@@ -22,8 +22,10 @@ public class Privilegio {
     @Max(value=200)
     private String privilegioDesc;
 
-    @ManyToMany(mappedBy = "privilegio" , fetch = FetchType.LAZY) //fetchtype = lazy porque não quer ver dados de cliente aquando consulta de privilegios
+    @ManyToMany(mappedBy = "privilegioList" , fetch = FetchType.LAZY) //fetchtype = lazy porque não quer ver dados de cliente aquando consulta de privilegios
     private List<Cliente> clienteList = new ArrayList<>();
+
+    public Privilegio(){}
 
     public Privilegio(PrivilegioEnum privilegio) {
         this.privilegioId = privilegio.getCodigo();

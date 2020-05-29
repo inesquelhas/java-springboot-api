@@ -15,7 +15,7 @@ create table if not exists clients (
    birth_date date not null,
    creation_at timestamp not null,
    updated_at timestamp null,
-   active char(1)
+   active char(1),
    constraint fk_clients_address foreign key (address_id) references addresses(address_id)
 );
 

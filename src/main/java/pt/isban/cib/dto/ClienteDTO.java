@@ -3,9 +3,13 @@ package pt.isban.cib.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import pt.isban.cib.entity.Cliente;
+import pt.isban.cib.enums.PrivilegioEnum;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 //DTO da classe Cliente
 public class ClienteDTO {
@@ -29,6 +33,12 @@ public class ClienteDTO {
 
     private Boolean ativo;
 
+    private MoradaDTO morada;
+
+    private List<DocumentoDTO> documentos = new ArrayList<>();
+
+    private List<PrivilegioEnum> privilegios = new ArrayList<>();
+
     public ClienteDTO (){};
 
     public ClienteDTO (Cliente cliente){
@@ -39,6 +49,18 @@ public class ClienteDTO {
         this.dataCriacao = cliente.getDataCriacao();
         this.dataAtualizacao = cliente.getDataAtualizacao();
         this.ativo = cliente.getAtivo();
+
+        this.morada = new MoradaDTO();
+        this.morada.setEndereco(cliente.getMorada().getEndereco());
+        this.morada.setComplemento(cliente.getMorada().getEnderecoComplement());
+
+        this.documentos.addAll(cliente.getDocList()
+               .stream()
+                .map(docIdent -> new DocumentoDTO(docIdent))
+                .collect(Collectors.toList())
+        );
+
+        this.privilegios.addAll(cliente.getPrivilegioList());
     }
 
     public Integer getClienteId() {
@@ -95,6 +117,30 @@ public class ClienteDTO {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public MoradaDTO getMorada() {
+        return morada;
+    }
+
+    public void setMorada(MoradaDTO morada) {
+        this.morada = morada;
+    }
+
+    public List<DocumentoDTO> getDocumentos() {
+        return documentos;
+    }
+
+    public void setDocumentos(List<DocumentoDTO> documentos) {
+        this.documentos = documentos;
+    }
+
+    public List<PrivilegioEnum> getPrivilegios() {
+        return privilegios;
+    }
+
+    public void setPrivilegios(List<PrivilegioEnum> privilegios) {
+        this.privilegios = privilegios;
     }
 
     @Override

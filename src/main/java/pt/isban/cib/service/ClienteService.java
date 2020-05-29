@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.isban.cib.dto.ClienteDTO;
 import pt.isban.cib.dto.ClienteInsertDTO;
 import pt.isban.cib.entity.Cliente;
+import pt.isban.cib.entity.Morada;
+import pt.isban.cib.enums.PrivilegioEnum;
 import pt.isban.cib.exception.NotFoundException;
 import pt.isban.cib.repository.ClienteRepository;
 
@@ -60,7 +62,25 @@ public class ClienteService {
 
         cliente.setAtivo(true);
 
-        cliente.setDataCriacao(new Date());
+        final Date currentDate = new Date();
+
+        cliente.setDataCriacao(currentDate);
+
+        //Definir as datas de criação para Morada e Documento de Identificação
+        Morada morada = cliente.getMorada();
+        morada.setDtCriacao(currentDate);
+        morada.setCliente(cliente);
+
+        cliente.getDocList().forEach(doc -> {
+            doc.setDtCriacao(currentDate);
+            doc.setCliente(cliente);
+        });
+
+        //Definir os privilegios do cliente - Privilegio 'CLIENT' por default
+
+        List<PrivilegioEnum> list = new ArrayList<>();
+        list.add(PrivilegioEnum.CLIENT);
+        cliente.setPrivilegioList(list);
 
         Cliente ClienteNew = clienteDAO.save(cliente);
 
