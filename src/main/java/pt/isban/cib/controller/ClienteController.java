@@ -9,7 +9,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pt.isban.cib.dto.ClienteDTO;
 import pt.isban.cib.dto.ClienteInsertDTO;
 import pt.isban.cib.entity.Cliente;
+import pt.isban.cib.enums.PrivilegioEnum;
+import pt.isban.cib.exception.AuthorizationException;
 import pt.isban.cib.repository.ClienteRepository;
+import pt.isban.cib.security.HTTPUtil;
+import pt.isban.cib.security.JWTUtil;
 import pt.isban.cib.service.ClienteService;
 
 import javax.validation.Valid;
@@ -24,6 +28,12 @@ public class ClienteController {
 
     @Autowired //anotaçao do spring (procura obj no sistema e instancia o objeto)
     private ClienteService clienteService;
+
+    @Autowired
+    private HTTPUtil httpUtil;
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     //GET
     /*@GetMapping(path="/clientes") //transformar metodo num pedido REST
@@ -108,11 +118,24 @@ public class ClienteController {
     @GetMapping(path = "/clientes/{id}")
     public ResponseEntity<ClienteDTO> getClientesById(@PathVariable Integer id) throws Throwable{
 
+        checkPermission(id);
         Cliente cliente = clienteService.getClienteById(id);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ClienteDTO(cliente));
+
+    }
+
+    //permitir operações somente para user/cliente do token
+    private void checkPermission(Integer id) {
+
+        final String token = httpUtil.getRequestToken();
+        final Integer tokenID = jwtUtil.getTokenId(token);
+
+        if(!id.equals(tokenID) && !httpUtil.hasRequestPrivilegio(PrivilegioEnum.ADMIN)){
+            throw new AuthorizationException("Não está autorizado a consultar estes dados.");
+        }
 
     }
 

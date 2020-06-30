@@ -1,6 +1,7 @@
 package pt.isban.cib.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,9 @@ public class ClienteService {
 
     @Autowired //anotaçao do spring (procura obj no sistema e instancia o objeto)
     private ClienteRepository clienteDAO;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     public List<Cliente> getClientes(){
 
@@ -81,6 +85,9 @@ public class ClienteService {
         List<PrivilegioEnum> list = new ArrayList<>();
         list.add(PrivilegioEnum.CLIENT);
         cliente.setPrivilegioList(list);
+
+        //Codificar a Password
+        cliente.setPassword(encoder.encode(cliente.getPassword()));
 
         Cliente ClienteNew = clienteDAO.save(cliente);
 
